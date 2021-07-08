@@ -189,7 +189,7 @@ class Moonfriend extends Module
 		$cart->add();
 		$date = date('Y-m-d H:i:s');
 		$attribute = Product::getDefaultAttribute($id_product);
-		Db::getInstance()->execute("INSERT INTO `cart_product` (`id_cart`, `id_product`, `id_address_delivery`, `id_shop`, `id_product_attribute`, `id_customization`, `quantity`, `date_add`)
+		Db::getInstance()->execute("INSERT INTO `"._DB_PREFIX_."cart_product` (`id_cart`, `id_product`, `id_address_delivery`, `id_shop`, `id_product_attribute`, `id_customization`, `quantity`, `date_add`)
 										VALUES ('$cart->id', '$id_product', '3', '1', '$attribute', '0', '1', '$date')");
 		return $cart;
 	}
