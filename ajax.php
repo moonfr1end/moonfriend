@@ -14,7 +14,8 @@ switch(Tools::getValue('action'))
 		$phone = Tools::getValue('phone');
 		$email = Tools::getValue('email');
 		if($name && $phone && $email && $id_product)
-			echo $obj_mf->addOrder($id_product, $name, $phone, $email);
+			//echo $obj_mf->addOrder($id_product, $name, $phone, $email);
+			echo $obj_mf->addOrder2($id_product);
 		else
 			echo false;
 		break;

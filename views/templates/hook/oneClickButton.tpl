@@ -55,6 +55,7 @@
         </div>
         <div class="modal-body">
             <h4 class="h4" style="text-align: center">{$MSG}</h4>
+            <!-- <div id="soobwenie"></div> -->
         </div>
         <div class="modal-footer">
             <button id="oc-close-msg" type="button" class="btn-primary">Закрыть</button>
@@ -98,6 +99,8 @@
                 method: 'POST',
                 success: function(data) {
                     if(data == true) {
+                      var res = JSON.parse(data);
+                      $('#soobwenie').html(res);
                       $('#name-oc').val('');
                       $('#phone-oc').val('');
                       $('#email-oc').val('');
