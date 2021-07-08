@@ -167,7 +167,7 @@ class Moonfriend extends Module
 										VALUES (NULL, '$order->id', '0', '0', '$shop_id', '$id_product', '$attribute', '0', '$product_name', '1', '1', '0', '0', '0', '$order->total_products', '0.00', '0.000000', '0.000000', '0.000000', '0.00', '0.000000', '', '', '', '', '$product_reference', '', '0.000000', '0', '0', '', '0.000', '0.000000', '0.000', '0', '', '0', '0000-00-00 00:00:00', '$order->total_products', '$order->total_products', '$order->total_products', '$order->total_products', '0.000000', '0.000000', '0.000000', '$order->total_products', '0.000000', '0.000000', '0.000000')");
 
 		$id_order = $order->id;
-		Db::getInstance()->execute("INSERT INTO `order_carrier` (`id_order_carrier`, `id_order`, `id_carrier`, `id_order_invoice`, `weight`, `shipping_cost_tax_excl`, `shipping_cost_tax_incl`, `tracking_number`, `date_add`) 
+		Db::getInstance()->execute("INSERT INTO `"._DB_PREFIX_."order_carrier` (`id_order_carrier`, `id_order`, `id_carrier`, `id_order_invoice`, `weight`, `shipping_cost_tax_excl`, `shipping_cost_tax_incl`, `tracking_number`, `date_add`) 
 										VALUES (NULL, '$id_order', '2', '0', '0.000000', '2.000000', '2.000000', '', '$date')");
 		return true;
 	}
