@@ -40,7 +40,7 @@ class MoonFunctions
 		$id_customer = Context::getContext()->customer->id;
 		$id_lang = Context::getContext()->language->id;
 
-		$order = new Order;
+		$order = new Order();
 		$customer = new Customer($id_customer);
 		$address = $customer->getAddresses($id_lang);
 
@@ -169,7 +169,7 @@ class MoonFunctions
 		$cart->id_shop_group = Context::getContext()->shop->id_shop_group;
 		$cart->id_carrier = 2;
 		$cart->secure_key = $secure_key;
-		$cart->delivery_option = '{"3":"2,"}';
+		//$cart->delivery_option = '{"3":"2,"}';
 		$cart->add();
 		$attribute = Product::getDefaultAttribute($id_product);
 		Db::getInstance()->execute("INSERT INTO `"._DB_PREFIX_."cart_product` (`id_cart`, `id_product`, `id_address_delivery`, `id_shop`, `id_product_attribute`, `id_customization`, `quantity`, `date_add`)
@@ -190,5 +190,12 @@ class MoonFunctions
 			'recordsFiltered' => $count,
 			'data' => $data
 		);
+	}
+
+	public function checkEmail($email) {
+		if(Customer::getCustomersByEmail($email)) {
+			return true;
+		}
+		return false;
 	}
 }

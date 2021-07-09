@@ -17,10 +17,27 @@ switch(Tools::getValue('action'))
 		$phone = Tools::getValue('phone');
 		$email = Tools::getValue('email');
 		if($name && $phone && $email && $id_product) {
-			//echo $obj_mf->addOrder($id_product, $name, $phone, $email);
-			echo $obj_mf->addOrder($id_product);
-		}
-		else {
+			if (Context::getContext()->customer->id !== null) {
+				$check = $obj_mf->checkEmail($email);
+				$cus = Customer::getCustomersByEmail($email);
+				if($check) {
+					if($cus[0]['id_customer'] == Context::getContext()->customer->id) {
+						if(mb_strtoupper($cus[0]['firstname']) == mb_strtoupper($name)) {
+							$obj_mf->addOrder($id_product);
+							echo 4;
+						} else {
+							echo 3;
+						}
+					} else {
+						echo 2;
+					}
+				} else {
+					echo 2;
+				}
+			} else {
+				echo 1;
+			}
+		} else {
 			echo 0;
 		}
 		break;
@@ -34,3 +51,4 @@ switch(Tools::getValue('action'))
 	default:
 		break;
 }
+

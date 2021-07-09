@@ -96,7 +96,7 @@
 
 #oc-error {
     padding-top: 10px;
-    opacity: 0;
+    opacity: 1;
     transition: opacity 1s ease;
     text-align: center;
     color: red;

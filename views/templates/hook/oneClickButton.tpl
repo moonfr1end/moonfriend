@@ -40,7 +40,7 @@
                             <label>E-Mail</label>
                         </div>
                         <input type="button" id="send-order-one-click" value="Заказать">
-                        <h4 class="h4" id="oc-error">Заполните форму</h4>
+                        <h4 class="h4" id="oc-error"></h4>
                     </form>
                 </div>
             </div>
@@ -98,7 +98,7 @@
                 },
                 method: 'POST',
                 success: function(data) {
-                    if(data == true) {
+                    if(data == 4) {
                       var res = JSON.parse(data);
                       $('#soobwenie').html(res);
                       $('#name-oc').val('');
@@ -106,8 +106,19 @@
                       $('#email-oc').val('');
                       $('.oc-notification').css('display', 'block');
                       $('.one-click-block').css('display', 'none');
-                    } else {
-                      $('#oc-error').css('opacity', '1');
+                      $('#oc-error').html('');
+                    }
+                    else if(data == 0) {
+                      $('#oc-error').html('Заполните форму');
+                    }
+                    else if(data == 1) {
+                      $('#oc-error').html('Сначала авторизируйтесь');
+                    }
+                    else if(data == 2) {
+                      $('#oc-error').html('Почта неправильна');
+                    }
+                    else if(data == 3) {
+                      $('#oc-error').html('Имя неправильно');
                     }
                 }
             });
