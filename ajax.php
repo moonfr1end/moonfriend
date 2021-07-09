@@ -1,7 +1,10 @@
 <?php
 require_once('../../config/config.inc.php');
 require_once('../../init.php');
-$obj_mf = Module::getInstanceByName('moonfriend');
+require_once(_PS_MODULE_DIR_.'/moonfriend/moonFunctions.php');
+
+//$obj_mf = Module::getInstanceByName('moonfriend');
+$obj_mf = new MoonFunctions();
 
 switch(Tools::getValue('action'))
 {
@@ -13,11 +16,13 @@ switch(Tools::getValue('action'))
 		$name = Tools::getValue('name');
 		$phone = Tools::getValue('phone');
 		$email = Tools::getValue('email');
-		if($name && $phone && $email && $id_product)
+		if($name && $phone && $email && $id_product) {
 			//echo $obj_mf->addOrder($id_product, $name, $phone, $email);
-			echo $obj_mf->addOrder2($id_product);
-		else
-			echo false;
+			echo $obj_mf->addOrder($id_product);
+		}
+		else {
+			echo 0;
+		}
 		break;
 	case 'ptable':
 		$order = Tools::getValue('order', array());

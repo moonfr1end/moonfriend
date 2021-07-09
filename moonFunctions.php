@@ -1,74 +1,11 @@
 <?php
 
-if(!defined('_PS_VERSION_'))
-	exit;
-
-class Moonfriend extends Module
+class MoonFunctions
 {
-	public function __construct()
-	{
-		$this->name = 'moonfriend';
-		$this->author = 'Moon';
-		$this->version = '1.0.0';
-		$this->bootstrap = true;
-		parent::__construct();
-		$this->displayName = $this->l('Moonfriend');
-		$this->description = $this->l('Quick order in one click!');
-		$this->ps_versions_compliancy = array('min' => '1.7.7.0', 'max' => '1.7.7.99');
-	}
-
-	public function install()
-	{
-		include_once($this->local_path.'sql/install.php');
-		return parent::install()
-			&& $this->registerHook('header')
-			&& $this->registerHook('displayOneClickOrderButton')
-			&& $this->installModuleTab();
-	}
-
-	public function uninstall()
-	{
-		include_once($this->local_path.'sql/uninstall.php');
-		return parent::uninstall();
-	}
-
-	public function hookHeader()
-	{
-		Media::addJsDef(array(
-			'mf_ajax' => $this->_path.'ajax.php'
-		));
-		$this->context->controller->addCSS(array(
-			$this->_path.'views/css/moonfriend.css'
-		));
-		$this->context->controller->addJS(array(
-			$this->_path.'views/js/moonfriend.js'
-		));
-	}
-
-	public function hookDisplayOneClickOrderButton()
-	{
-		$this->context->smarty->assign(array(
-			'MSG' => Configuration::get('MOONFRIEND_MSG')
-		));
-		return $this->display(__FILE__, 'views/templates/hook/oneClickButton.tpl');
-	}
-
-	public function getContent()
-	{
-		if(Tools::isSubmit('save-msg')) {
-			$msg = Tools::getValue('print');
-			Configuration::updateValue('MOONFRIEND_MSG', $msg);
-		}
-		$this->context->smarty->assign(array(
-			'MOONFRIEND_MSG' => Configuration::get('MOONFRIEND_MSG')
-		));
-		return $this->display(__FILE__, 'views/templates/admin/configure.tpl');
-	}
-
 	public function getProductInfoByID($id_product)
 	{
 		$image = Image::getCover($id_product);
-		$product = new Product($id_product, false, $this->context->language->id);
+		$product = new Product($id_product, false, Context::getContext()->language->id);
 		$link = new Link;
 		$imagePath = $link->getImageLink($product->link_rewrite, $image['id_image'], 'large_default');
 
@@ -76,7 +13,7 @@ class Moonfriend extends Module
 										FROM `'._DB_PREFIX_.'product` p
 										LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
 										ON(p.`id_product` = pl.`id_product`)
-										WHERE pl.`id_lang` = '.(int)$this->context->language->id.'
+										WHERE pl.`id_lang` = '.(int)Context::getContext()->language->id.'
 										AND p.`id_product` = '.$id_product);
 
 		$price = Product::getPriceStatic($id_product);
@@ -88,35 +25,20 @@ class Moonfriend extends Module
 		);
 	}
 
-	public function installModuleTab()
-	{
-		$tab = new Tab;
-		foreach (Language::getLanguages() as $lang)
-		{
-			$tab->name[$lang['id_lang']] = $this->l('Заказы в один клик');
-		}
-		$tab->class_name = 'AdminMoon';
-		$tab->module = $this->name;
-		$tab->id_parent = Tab::getIdFromClassName('AdminParentOrders');
-		$tab->active = 1;
-		$tab->add();
-		return true;
-	}
-
 	/* public function addOrder($id_product, $name, $phone, $email)
 	{
 		$product_name = $this->getProductInfoByID($id_product);
 		$pn = $product_name['name'];
 		$date = date('Y-m-d H:i:s');
-		Db::getInstance()->execute("INSERT INTO `"._DB_PREFIX_."order_one_click` (`id_order_one_click`, `id_product`, `product_name`, `name`, `email`, `phone`, `date`) 
+		Db::getInstance()->execute("INSERT INTO `"._DB_PREFIX_."order_one_click` (`id_order_one_click`, `id_product`, `product_name`, `name`, `email`, `phone`, `date`)
 										VALUES (NULL, '$id_product', '$pn', '$name', '$email', '$phone', '$date')");
 		return true;
 	} */
 
 	public function addOrder($id_product)
 	{
-		$id_customer = $this->context->customer->id;
-		$id_lang = $this->context->language->id;
+		$id_customer = Context::getContext()->customer->id;
+		$id_lang = Context::getContext()->language->id;
 
 		$order = new Order;
 		$customer = new Customer($id_customer);
@@ -136,11 +58,11 @@ class Moonfriend extends Module
 		$order->recyclable = 0;
 		$order->gift_message = '';
 		$order->shipping_number = '';
-		$order->id_currency = $this->context->currency->id;
+		$order->id_currency = Context::getContext()->currency->id;
 		$order->id_carrier = 2;
 		$order->module = 'ps_checkpayment';
-		$order->id_shop = $this->context->shop->id;
-		$order->id_shop_group = $this->context->shop->id_shop_group;
+		$order->id_shop = Context::getContext()->shop->id;
+		$order->id_shop_group = Context::getContext()->shop->id_shop_group;
 		$order->current_state = 1;
 		$order->payment = 'Payment by check';
 		$order->total_paid = Product::getPriceStatic($id_product) + $ship_cost;
@@ -161,7 +83,7 @@ class Moonfriend extends Module
 		$attribute = Product::getDefaultAttribute($id_product);
 		$product_name = $product[0]['name'];
 		$product_reference = $product[0]['reference'];
-		$shop_id = $this->context->shop->id;
+		$shop_id = Context::getContext()->shop->id;
 
 		$order_detail = new OrderDetail();
 		$order_detail->id_order = $order->id;
@@ -240,14 +162,13 @@ class Moonfriend extends Module
 		$cart = new Cart;
 		$cart->id_address_delivery = $id_address;
 		$cart->id_address_invoice = $id_address;
-		$cart->id_currency = $this->context->currency->id;
+		$cart->id_currency = Context::getContext()->currency->id;
 		$cart->id_customer = $id_customer;
 		$cart->id_lang = $id_lang;
-		$cart->id_shop = $this->context->shop->id;
-		$cart->id_shop_group = $this->context->shop->id_shop_group;
+		$cart->id_shop = Context::getContext()->shop->id;
+		$cart->id_shop_group = Context::getContext()->shop->id_shop_group;
 		$cart->id_carrier = 2;
 		$cart->secure_key = $secure_key;
-		$cart->id_guest = 1;
 		$cart->delivery_option = '{"3":"2,"}';
 		$cart->add();
 		$attribute = Product::getDefaultAttribute($id_product);
