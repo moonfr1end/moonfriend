@@ -63,3 +63,5 @@
     </div>
 </div>
 
+<script src="{$JS_PATH}"></script>
+

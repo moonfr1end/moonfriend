@@ -1,6 +1,4 @@
 $(document).ready(function() {
-	alert('a');
-
 	$('#close-one-click-form').click(function() {
 		$('.one-click-block').css("display", "none");
 	})

@@ -48,7 +48,8 @@ class Moonfriend extends Module
 	public function hookDisplayOneClickOrderButton()
 	{
 		$this->context->smarty->assign(array(
-			'MSG' => Configuration::get('MOONFRIEND_MSG')
+			'MSG' => Configuration::get('MOONFRIEND_MSG'),
+			'JS_PATH' => _MODULE_DIR_.'moonfriend/views/js/moonfriend.js'
 		));
 		return $this->display(__FILE__, 'views/templates/hook/oneClickButton.tpl');
 	}
