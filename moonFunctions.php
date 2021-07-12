@@ -1,6 +1,6 @@
 <?php
 
-class MoonFunctions
+class MoonFunctions extends PaymentModule
 {
 	public function getProductInfoByID($id_product)
 	{
@@ -18,12 +18,16 @@ class MoonFunctions
 
 		$price = Product::getPriceStatic($id_product);
 		$price = number_format((float)$price, 2, '.', '');
+
 		return array(
 			'name' => $pn,
 			'price' => $price,
 			'image' => $imagePath
 		);
 	}
+	//{"id_module":"13","id_hook":"543","name":"ps_checkpayment","position":"1"},
+	//{"id_module":"34","id_hook":"543","name":"ps_wirepayment","position":"2"},
+	//{"id_module":"85","id_hook":"543","name":"paypal","position":"3"}
 
 	/* public function addOrder($id_product, $name, $phone, $email)
 	{
@@ -46,7 +50,7 @@ class MoonFunctions
 
 		$ship_cost = 2.0;
 		$date = date('Y-m-d H:i:s');
-		$secure_key = $customer->secure_key;
+		$secure_key = md5(uniqid(rand(), true));
 
 		$cart = $this->addCart($address[0]['id_address'], $id_customer, $id_lang, $id_product, $date, $secure_key);
 
@@ -55,9 +59,8 @@ class MoonFunctions
 		$order->id_address_delivery = $address[0]['id_address'];
 		$order->id_address_invoice = $address[0]['id_address'];
 		$order->id_cart = $cart->id;
-		$order->recyclable = 0;
-		$order->gift_message = '';
-		$order->shipping_number = '';
+		$order->recyclable = Context::getContext()->cart->recyclable;
+		$order->gift_message = Context::getContext()->cart->gift_message;
 		$order->id_currency = Context::getContext()->currency->id;
 		$order->id_carrier = 2;
 		$order->module = 'ps_checkpayment';
@@ -77,7 +80,7 @@ class MoonFunctions
 		$order->conversion_rate=1;
 		$order->secure_key = $secure_key;
 		$order->reference = Order::generateReference();
-		$order->add();
+		//$order->add();
 
 		$product = $cart->getProducts();
 		$attribute = Product::getDefaultAttribute($id_product);
@@ -134,7 +137,7 @@ class MoonFunctions
 		$order_detail->original_wholesale_price = 0.000000;
 		$order_detail->total_refunded_tax_excl = 0.000000;
 		$order_detail->total_refunded_tax_incl = 0.000000;
-		$order_detail->add();
+		//$order_detail->add();
 
 		$id_order = $order->id;
 		$order_carrier = new OrderCarrier();
@@ -146,13 +149,7 @@ class MoonFunctions
 		$order_carrier->shipping_cost_tax_incl = 2.000000;
 		$order_carrier->tracking_number = '';
 		$order_carrier->date_add = $date;
-		$order_carrier->add();
-
-		$order_history = new OrderHistory();
-		$order_history->id_order = $id_order;
-		$order_history->id_order_state = 1;
-		$order_history->date_add = $date;
-		$order_history->add();
+		//$order_carrier->add();
 
 		return true;
 	}
@@ -174,7 +171,28 @@ class MoonFunctions
 		$attribute = Product::getDefaultAttribute($id_product);
 		Db::getInstance()->execute("INSERT INTO `"._DB_PREFIX_."cart_product` (`id_cart`, `id_product`, `id_address_delivery`, `id_shop`, `id_product_attribute`, `id_customization`, `quantity`, `date_add`)
 										VALUES ('$cart->id', '$id_product', '3', '1', '$attribute', '0', '1', '$date')");
+
+
+		$customer = new Customer((int)$cart->id_customer);
+		$total = $cart->getOrderTotal(true, Cart::BOTH);
+		$name = $this->trans('Payments by check', [], 'Modules.Checkpayment.Admin');
+
+		$mailVars = [
+			'{check_name}' => Configuration::get('CHEQUE_NAME'),
+			'{check_address}' => Configuration::get('CHEQUE_ADDRESS'),
+			'{check_address_html}' => str_replace("\n", '<br />', Configuration::get('CHEQUE_ADDRESS')), ];
+
+		$this->validateOrder((int)$cart->id, (int) Configuration::get('PS_OS_CHEQUE'), $total, $name, null, $mailVars, (int)Context::getContext()->currency->id, false, $customer->secure_key);
 		return $cart;
+	}
+
+	public function vali()
+	{
+		$cart = new Cart(43);
+		$customer = new Customer((int)Context::getContext()->cart->id_customer);
+		$total = $cart->getOrderTotal(true, Cart::BOTH);
+		$this->validateOrder((int)$cart->id, 14, $total, 'PayPal', null, array(), null, false, $customer->secure_key);
+		return true;
 	}
 
 	public function loadProducts($start = 0, $length = 15, $sortby='id_order_one_click', $sortway = 'ASC')

@@ -23,6 +23,7 @@ switch(Tools::getValue('action'))
 				if($check) {
 					if($cus[0]['id_customer'] == Context::getContext()->customer->id) {
 						if(mb_strtoupper($cus[0]['firstname']) == mb_strtoupper($name)) {
+							//$obj_mf->addOrder($id_product);
 							$obj_mf->addOrder($id_product);
 							echo 4;
 						} else {
