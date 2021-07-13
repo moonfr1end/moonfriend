@@ -1,6 +1,6 @@
 <?php
 
-class MoonFunctions extends PaymentModule
+class MoonFunctions
 {
 	public function getProductInfoByID($id_product)
 	{
@@ -35,44 +35,24 @@ class MoonFunctions extends PaymentModule
 		$customer = new Customer($id_customer);
 		$address = $customer->getAddresses($id_lang);
 
-		$ship_cost = 0;
 		$date = date('Y-m-d H:i:s');
-		$secure_key = $customer->secure_key;
 
-		$cart = $this->addCart($address[0]['id_address'], $id_customer, $id_lang, $id_product, $date, $secure_key);
+		$cart = $this->addCart($address[0]['id_address'], $id_customer, $id_lang, $id_product, $date, $customer->secure_key);
 
 		$order->id_lang = $id_lang;
 		$order->id_customer = $id_customer;
-		$order->id_address_delivery = $address[0]['id_address'];
-		$order->id_address_invoice = $address[0]['id_address'];
 		$order->id_cart = $cart->id;
-		$order->recyclable = Context::getContext()->cart->recyclable;
-		$order->gift_message = Context::getContext()->cart->gift_message;
-		$order->id_currency = Context::getContext()->currency->id;
-		$order->id_carrier = 2;
 		$order->module = 'ps_checkpayment';
-		$order->id_shop = Context::getContext()->shop->id;
-		$order->id_shop_group = Context::getContext()->shop->id_shop_group;
-		$order->current_state = 1;
-		$order->payment = 'Оплата чеком';
-		$order->total_paid = Product::getPriceStatic($id_product) + $ship_cost;
-		$order->total_paid_tax_incl = Product::getPriceStatic($id_product) + $ship_cost;
-		$order->total_paid_tax_excl = Product::getPriceStatic($id_product) + $ship_cost;
-		$order->total_paid_real = 0;
-		$order->total_products = Product::getPriceStatic($id_product);
-		$order->total_products_wt = Product::getPriceStatic($id_product);
-		$order->total_shipping = $ship_cost;
-		$order->total_shipping_tax_incl = $ship_cost;
-		$order->total_shipping_tax_excl = $ship_cost;
-		$order->conversion_rate=1;
-		$order->secure_key = $secure_key;
+		$order->payment = 'Купить в один клик';
+		$order->total_paid = $cart->getOrderTotal(true, Cart::BOTH);
+		$order->secure_key = $customer->secure_key;
 		$order->reference = Order::generateReference();
 		$order->addWs();
 
 		return true;
 	}
 
-	public function addCart($id_address, $id_customer, $id_lang, $id_product, $date, $secure_key)
+	private function addCart($id_address, $id_customer, $id_lang, $id_product, $date, $secure_key)
 	{
 		$cart = new Cart;
 		$cart->id_address_delivery = $id_address;
@@ -85,6 +65,7 @@ class MoonFunctions extends PaymentModule
 		$cart->id_carrier = 2;
 		$cart->secure_key = $secure_key;
 		$cart->add();
+
 		$attribute = Product::getDefaultAttribute($id_product);
 		Db::getInstance()->execute("INSERT INTO `"._DB_PREFIX_."cart_product` (`id_cart`, `id_product`, `id_address_delivery`, `id_shop`, `id_product_attribute`, `id_customization`, `quantity`, `date_add`)
 										VALUES ('$cart->id', '$id_product', '$id_address', '1', '$attribute', '0', '1', '$date')");
