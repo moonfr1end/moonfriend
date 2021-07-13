@@ -3,7 +3,6 @@ require_once('../../config/config.inc.php');
 require_once('../../init.php');
 require_once(_PS_MODULE_DIR_.'/moonfriend/moonFunctions.php');
 
-//$obj_mf = Module::getInstanceByName('moonfriend');
 $obj_mf = new MoonFunctions();
 
 switch(Tools::getValue('action'))
@@ -41,13 +40,6 @@ switch(Tools::getValue('action'))
 		} else {
 			echo 0;
 		}
-		break;
-	case 'ptable':
-		$order = Tools::getValue('order', array());
-		$columns = Tools::getValue('columns', array());
-		$sortway = $order[0]['dir'];
-		$sortby = $columns[$order[0]['column']]['data'];
-		echo Tools::jsonEncode($obj_mf->loadProducts(Tools::getValue('start', 0), Tools::getValue('length', 15), $sortby, $sortway));
 		break;
 	default:
 		break;

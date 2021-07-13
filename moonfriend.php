@@ -19,16 +19,13 @@ class Moonfriend extends Module
 
 	public function install()
 	{
-		include_once($this->local_path.'sql/install.php');
 		return parent::install()
 			&& $this->registerHook('header')
-			&& $this->registerHook('displayOneClickOrderButton')
-			&& $this->installModuleTab();
+			&& $this->registerHook('displayOneClickOrderButton');
 	}
 
 	public function uninstall()
 	{
-		include_once($this->local_path.'sql/uninstall.php');
 		return parent::uninstall();
 	}
 
@@ -64,21 +61,6 @@ class Moonfriend extends Module
 			'MOONFRIEND_MSG' => Configuration::get('MOONFRIEND_MSG')
 		));
 		return $this->display(__FILE__, 'views/templates/admin/configure.tpl');
-	}
-
-	public function installModuleTab()
-	{
-		$tab = new Tab;
-		foreach (Language::getLanguages() as $lang)
-		{
-			$tab->name[$lang['id_lang']] = $this->l('Заказы в один клик');
-		}
-		$tab->class_name = 'AdminMoon';
-		$tab->module = $this->name;
-		$tab->id_parent = Tab::getIdFromClassName('AdminParentOrders');
-		$tab->active = 1;
-		$tab->add();
-		return true;
 	}
 
 }
