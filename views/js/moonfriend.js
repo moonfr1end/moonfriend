@@ -22,6 +22,7 @@ $(document).ready(function() {
 	})
 
 	$('body').on('click', '#send-order-one-click', function() {
+		$('#oc-request-wait').css('opacity', '1');
 		$.ajax({
 			url: mf_ajax + '?action=sendForm',
 			data: {
@@ -40,9 +41,10 @@ $(document).ready(function() {
 					$('.one-click-block').css('display', 'none');
 					$('#oc-error').html('');
 				} else {
-					var res = JSON.parse(data);
-					$('#oc-error').html(res[0]);
+					var err = JSON.parse(data);
+					$('#oc-error').html(err[0]);
 				}
+				$('#oc-request-wait').css('opacity', '0');
 			}
 		});
 	})

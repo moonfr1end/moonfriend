@@ -101,3 +101,8 @@
     text-align: center;
     color: red;
 }
+
+#oc-request-wait {
+    opacity: 0;
+    transition: opacity .5s ease;
+}

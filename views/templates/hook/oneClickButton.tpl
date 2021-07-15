@@ -40,6 +40,7 @@
                         </div>
                         <input type="button" id="send-order-one-click" value="Заказать">
                         <h4 class="h4" id="oc-error"></h4>
+                        <span id="oc-request-wait">{l s='Ожидание запроса...' mod='moonfriend'}</span>
                     </form>
                 </div>
             </div>
