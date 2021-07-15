@@ -14,10 +14,9 @@
                 <div class="col-md-6 col-sm-6 hidden-xs-down">
                     <div class="images-container">
                         <div class="product-cover" id="oc-img">
-                            <h4 class="h4 oc-product-name">Name</h4>
+                            <h4 class="h4 oc-product-name"></h4>
                             <img class="js-qv-product-cover" src="" style="width:100%;" itemprop="image">
-                            <!-- <img class="js-qv-product-cover" src="http://prestashop/21-large_default/brown-bear-printed-sweater.jpg" alt="Brown bear printed sweater" title="Brown bear printed sweater" style="width:100%;" itemprop="image"> -->
-                            <h4 class="oc-product-price">22,94 ₽</h4>
+                            <h4 class="oc-product-price"></h4>
                         </div>
                     </div>
                 </div>
@@ -25,17 +24,17 @@
                     <h1 style="text-align: center" class="h1">Форма заказа</h1>
                     <form method="post" class="one-click-form">
                         <div class="txt_field">
-                            <input id="name-oc" type="text" required>
+                            <input id="name-oc" value="{$NAME}" type="text" required>
                             <span></span>
                             <label>Имя</label>
                         </div>
                         <div class="txt_field">
-                            <input id="phone-oc" type="number" required>
+                            <input id="phone-oc" value="{$PHONE}" type="number" required>
                             <span></span>
                             <label>Телефон</label>
                         </div>
                         <div class="txt_field">
-                            <input id="email-oc" type="text" required>
+                            <input id="email-oc" value="{$EMAIL}" type="text" required>
                             <span></span>
                             <label>E-Mail</label>
                         </div>
@@ -55,13 +54,10 @@
         </div>
         <div class="modal-body">
             <h4 class="h4" style="text-align: center">{$MSG}</h4>
-            <!-- <div id="soobwenie"></div> -->
         </div>
         <div class="modal-footer">
             <button id="oc-close-msg" type="button" class="btn-primary">Закрыть</button>
         </div>
     </div>
 </div>
-
-<script src="{$JS_PATH}"></script>
 

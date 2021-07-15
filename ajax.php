@@ -3,42 +3,23 @@ require_once('../../config/config.inc.php');
 require_once('../../init.php');
 require_once(_PS_MODULE_DIR_.'/moonfriend/moonFunctions.php');
 
-$obj_mf = new MoonFunctions();
-
 switch(Tools::getValue('action'))
 {
 	case 'displayForm':
-		echo json_encode($obj_mf->getProductInfoByID(Tools::getValue('id_product')));
+		echo json_encode(MoonFunctions::getProductInfoByID(Tools::getValue('id_product')), 1);
 		break;
 	case 'sendForm':
 		$id_product = Tools::getValue('id_product');
 		$name = Tools::getValue('name');
 		$phone = Tools::getValue('phone');
 		$email = Tools::getValue('email');
-		if($name && $phone && $email && $id_product) {
-			if (Context::getContext()->customer->id !== null) {
-				$check = $obj_mf->checkEmail($email);
-				$cus = Customer::getCustomersByEmail($email);
-				if($check) {
-					if($cus[0]['id_customer'] == Context::getContext()->customer->id) {
-						if(mb_strtoupper($cus[0]['firstname']) == mb_strtoupper($name)) {
-							//$obj_mf->addOrder($id_product);
-							$obj_mf->addOrder($id_product);
-							echo 4;
-						} else {
-							echo 3;
-						}
-					} else {
-						echo 2;
-					}
-				} else {
-					echo 2;
-				}
-			} else {
-				echo 1;
-			}
+
+		if(!MoonFunctions::checkErrors($name, $phone, $email)) {
+			$id_address = MoonFunctions::getAddressByPhone($phone);
+			$id_customer = MoonFunctions::getCustomerID();
+			echo MoonFunctions::addOrder($id_product, $id_address, $id_customer);
 		} else {
-			echo 0;
+			echo json_encode(MoonFunctions::checkErrors($name, $phone, $email));
 		}
 		break;
 	default:

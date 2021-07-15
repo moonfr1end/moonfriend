@@ -3,7 +3,7 @@
 if(!defined('_PS_VERSION_'))
 	exit;
 
-class Moonfriend extends Module
+class Moonfriend extends PaymentModule
 {
 	public function __construct()
 	{
@@ -20,7 +20,7 @@ class Moonfriend extends Module
 	public function install()
 	{
 		return parent::install()
-			&& $this->registerHook('header')
+			&& $this->registerHook('displayHeader')
 			&& $this->registerHook('displayOneClickOrderButton');
 	}
 
@@ -29,7 +29,7 @@ class Moonfriend extends Module
 		return parent::uninstall();
 	}
 
-	public function hookHeader()
+	public function hookDisplayHeader()
 	{
 		Media::addJsDef(array(
 			'mf_ajax' => $this->_path.'ajax.php'
@@ -44,9 +44,24 @@ class Moonfriend extends Module
 
 	public function hookDisplayOneClickOrderButton()
 	{
+		$name = '';
+		$phone = '';
+		$email = '';
+		if($this->context->customer->id !== null) {
+			$customer = new Customer($this->context->customer->id);
+			$name = $customer->firstname;
+			$addresses = $customer->getAddresses($this->context->language->id);
+			if($addresses != null) {
+				$phone = $addresses[0]['phone'];
+			}
+			$email = $customer->email;
+		}
+
 		$this->context->smarty->assign(array(
 			'MSG' => Configuration::get('MOONFRIEND_MSG'),
-			'JS_PATH' => _MODULE_DIR_.'moonfriend/views/js/moonfriend.js'
+			'NAME' => $name,
+			'PHONE' => $phone,
+			'EMAIL' => $email
 		));
 		return $this->display(__FILE__, 'views/templates/hook/oneClickButton.tpl');
 	}
