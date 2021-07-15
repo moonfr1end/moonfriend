@@ -3,10 +3,12 @@ require_once('../../config/config.inc.php');
 require_once('../../init.php');
 require_once(_PS_MODULE_DIR_.'/moonfriend/moonFunctions.php');
 
+$obj_mf = new MoonFunctions();
+
 switch(Tools::getValue('action'))
 {
 	case 'displayForm':
-		echo json_encode(MoonFunctions::getProductInfoByID(Tools::getValue('id_product')), 1);
+		echo json_encode($obj_mf->getProductInfoByID(Tools::getValue('id_product')), 1);
 		break;
 	case 'sendForm':
 		$id_product = Tools::getValue('id_product');
@@ -14,12 +16,12 @@ switch(Tools::getValue('action'))
 		$phone = Tools::getValue('phone');
 		$email = Tools::getValue('email');
 
-		if(!MoonFunctions::checkErrors($name, $phone, $email)) {
-			$id_address = MoonFunctions::getAddressByPhone($phone);
-			$id_customer = MoonFunctions::getCustomerID();
-			echo MoonFunctions::addOrder($id_product, $id_address, $id_customer);
+		if(!$obj_mf->checkErrors($name, $phone, $email)) {
+			$id_address = $obj_mf->getAddressByPhone($phone);
+			$id_customer = $obj_mf->getCustomerID();
+			echo $obj_mf->addOrder($id_product, $id_address, $id_customer);
 		} else {
-			echo json_encode(MoonFunctions::checkErrors($name, $phone, $email));
+			echo json_encode($obj_mf->checkErrors($name, $phone, $email));
 		}
 		break;
 	default:

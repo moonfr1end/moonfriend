@@ -2,11 +2,11 @@
 
 class MoonFunctions
 {
-	private static $errors = Array();
+	private $errors = Array();
 
-	private static $customer;
+	private $customer;
 
-	private static $address;
+	private $address;
 
 	public function getProductInfoByID($id_product)
 	{
@@ -24,6 +24,7 @@ class MoonFunctions
 
 		$price = Product::getPriceStatic($id_product);
 		$price = number_format((float)$price, 2, '.', '');
+
 		return array(
 			'name' => $pn,
 			'price' => $price,
@@ -73,13 +74,13 @@ class MoonFunctions
 		return $cart;
 	}
 
-	public static function checkErrors($name, $phone, $email)
+	public function checkErrors($name, $phone, $email)
 	{
-		self::checkNameAndPassword($name, $email);
-		self::checkAddress(self::$address);
-		self::checkPhone(self::$address, $phone);
+		$this->checkNameAndPassword($name, $email);
+		$this->checkAddress($this->address);
+		$this->checkPhone($this->address, $phone);
 
-		return self::$errors;
+		return $this->errors;
 	}
 
 	private function checkNameAndPassword($name, $email)
@@ -87,47 +88,47 @@ class MoonFunctions
 		$customer = Customer::getCustomersByEmail($email);
 		if($customer != null) {
 			if($customer[0]['firstname'] == $name) {
-				self::$customer = new Customer($customer[0]['id_customer']);
-				self::$address = self::$customer->getAddresses(Context::getContext()->language->id);
+				$this->customer = new Customer($customer[0]['id_customer']);
+				$this->address = $this->customer->getAddresses(Context::getContext()->language->id);
 				return true;
 			}
 		}
-		self::$errors[] = 'Неправильное имя или email';
+		$this->errors[] = 'Неправильное имя или email';
 		return false;
 	}
 
 	private function checkAddress($address)
 	{
-		if(self::$errors == null) {
+		if($this->errors == null) {
 			if($address != null)
 				return true;
-			self::$errors[] = 'Добавьте адреса в аккаунта';
+			$this->errors[] = 'Добавьте адреса в аккаунта';
 			return false;
 		}
 	}
 
 	private function checkPhone($address, $phone)
 	{
-		if(self::$errors == null) {
+		if($this->errors == null) {
 			foreach ($address as $value) {
 				if($phone == $value['phone'])
 					return true;
 			}
-			self::$errors[] = 'Неправильный телефон';
+			$this->errors[] = 'Неправильный телефон';
 			return false;
 		}
 	}
 
-	public static function getAddressByPhone($phone)
+	public function getAddressByPhone($phone)
 	{
-		foreach (self::$address as $value) {
+		foreach ($this->address as $value) {
 			if($phone == $value['phone'])
 				return $value['id_address'];
 		}
 	}
 
-	public static function getCustomerID()
+	public function getCustomerID()
 	{
-		return self::$customer->id;
+		return $this->customer->id;
 	}
 }
