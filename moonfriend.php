@@ -21,7 +21,8 @@ class Moonfriend extends PaymentModule
 	{
 		return parent::install()
 			&& $this->registerHook('displayHeader')
-			&& $this->registerHook('displayOneClickOrderButton');
+			&& $this->registerHook('displayOneClickOrderButton')
+			&& $this->installModuleTab();
 	}
 
 	public function uninstall()
@@ -47,7 +48,7 @@ class Moonfriend extends PaymentModule
 		$name = '';
 		$phone = '';
 		$email = '';
-		if($this->context->customer->id !== null) {
+		if($this->context->customer->isLogged()) {
 			$customer = new Customer($this->context->customer->id);
 			$name = $customer->firstname;
 			$addresses = $customer->getAddresses($this->context->language->id);
@@ -78,4 +79,18 @@ class Moonfriend extends PaymentModule
 		return $this->display(__FILE__, 'views/templates/admin/configure.tpl');
 	}
 
+	public function installModuleTab()
+	{
+		$tab = new Tab;
+		foreach (Language::getLanguages() as $lang)
+		{
+			$tab->name[$lang['id_lang']] = $this->l('Заказы в один клик');
+		}
+		$tab->class_name = 'AdminMoon';
+		$tab->module = $this->name;
+		$tab->id_parent = Tab::getIdFromClassName('AdminParentOrders');
+		$tab->active = 1;
+		$tab->add();
+		return true;
+	}
 }
