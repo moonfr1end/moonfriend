@@ -26,17 +26,17 @@
                         <div class="txt_field">
                             <input id="name-oc" value="{$NAME}" type="text" required>
                             <span></span>
-                            <label>Имя</label>
+                            <label>{l s='Имя' mod='moonfriend'}</label>
                         </div>
                         <div class="txt_field">
                             <input id="phone-oc" value="{$PHONE}" type="number" required>
                             <span></span>
-                            <label>Телефон</label>
+                            <label>{l s='Телефон' mod='moonfriend'}</label>
                         </div>
                         <div class="txt_field">
                             <input id="email-oc" value="{$EMAIL}" type="text" required>
                             <span></span>
-                            <label>E-Mail</label>
+                            <label>{l s='E-Mail' mod='moonfriend'}</label>
                         </div>
                         <input type="button" id="send-order-one-click" value="Заказать">
                         <h4 class="h4" id="oc-error"></h4>
@@ -51,13 +51,13 @@
 <div class="oc-notification">
     <div class="modal-content">
         <div class="modal-header">
-            <h4 class="h4" style="text-align: center">Заказ в один клик</h4>
+            <h4 class="h4" style="text-align: center">{l s='Заказ в один клик' mod='moonfriend'}</h4>
         </div>
         <div class="modal-body">
             <h4 class="h4" style="text-align: center">{$MSG}</h4>
         </div>
         <div class="modal-footer">
-            <button id="oc-close-msg" type="button" class="btn-primary">Закрыть</button>
+            <button id="oc-close-msg" type="button" class="btn-primary">{l s='Закрыть' mod='moonfriend'}</button>
         </div>
     </div>
 </div>

@@ -1,6 +1,8 @@
 <?php
 
-class MoonFunctions
+require_once('moonfriend.php');
+
+class MoonFunctions extends Moonfriend
 {
 	private $errors = Array();
 
@@ -93,7 +95,7 @@ class MoonFunctions
 				return true;
 			}
 		}
-		$this->errors[] = 'Неправильное имя или email';
+		$this->errors[] = $this->l('Неправильное имя или email');
 		return false;
 	}
 
@@ -102,7 +104,7 @@ class MoonFunctions
 		if($this->errors == null) {
 			if($address != null)
 				return true;
-			$this->errors[] = 'Добавьте адреса в аккаунта';
+			$this->errors[] = $this->l('Добавьте адреса в аккаунта');
 			return false;
 		}
 	}
@@ -114,7 +116,7 @@ class MoonFunctions
 				if($phone == $value['phone'])
 					return true;
 			}
-			$this->errors[] = 'Неправильный телефон';
+			$this->errors[] = $this->l('Неправильный телефон');
 			return false;
 		}
 	}
