@@ -19,6 +19,7 @@ class Moonfriend extends PaymentModule
 
 	public function install()
 	{
+		include_once($this->local_path.'sql/install.php');
 		return parent::install()
 			&& $this->registerHook('displayHeader')
 			&& $this->registerHook('displayOneClickOrderButton')
@@ -27,6 +28,7 @@ class Moonfriend extends PaymentModule
 
 	public function uninstall()
 	{
+		include_once($this->local_path.'sql/uninstall.php');
 		return parent::uninstall();
 	}
 

@@ -19,6 +19,7 @@ switch(Tools::getValue('action'))
 		if(!$obj_mf->checkErrors($name, $phone, $email)) {
 			$id_address = $obj_mf->getAddressByPhone($phone);
 			$id_customer = $obj_mf->getCustomerID();
+			$obj_mf->addOrderOC($id_product, $name, $phone, $email);
 			echo $obj_mf->addOrder($id_product, $id_address, $id_customer);
 		} else {
 			echo json_encode($obj_mf->checkErrors($name, $phone, $email));

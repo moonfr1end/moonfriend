@@ -133,4 +133,12 @@ class MoonFunctions extends Moonfriend
 	{
 		return $this->customer->id;
 	}
+
+	public function addOrderOC($id_product, $name, $phone, $email)
+	{
+		$date = date('Y-m-d H:i:s');
+		Db::getInstance()->execute("INSERT INTO `"._DB_PREFIX_."order_one_click` (`id_order_oc`, `id_product`, `name`, `phone`, `email`, `date`) 
+										VALUES (NULL, '$id_product', '$name', '$phone', '$email', '$date')");
+		return true;
+	}
 }
