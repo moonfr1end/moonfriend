@@ -43,7 +43,7 @@ class Student extends ObjectModel
 	 */
 	public static function getAllStudents($id_lang)
 	{
-		$students = Db::getInstance()->executeS("SELECT s.*, sl.* 
+		$students = Db::getInstance()->executeS("SELECT s.*, sl.name 
 													FROM `"._DB_PREFIX_."student` s 
 													LEFT JOIN `"._DB_PREFIX_."student_lang` sl ON (s.`id_student` = sl.`id_student`)
 													WHERE sl.`id_lang` = ".(int)$id_lang);
@@ -55,7 +55,7 @@ class Student extends ObjectModel
 	 */
 	public static function getBestStudent($id_lang)
 	{
-		$student = Db::getInstance()->execute("SELECT s.*, sl.* 
+		$student = Db::getInstance()->execute("SELECT s.*, sl.name 
 													FROM   `"._DB_PREFIX_."student` s
 													LEFT JOIN `"._DB_PREFIX_."student_lang` sl ON (s.`id_student` = sl.`id_student`)
 													WHERE sl.`id_lang` = ".(int)$id_lang."
