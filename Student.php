@@ -41,21 +41,25 @@ class Student extends ObjectModel
 	/**
 	 * @return array of Students
 	 */
-	public static function getAllStudents()
+	public static function getAllStudents($id_lang)
 	{
-		$students = Db::getInstance()->executeS("SELECT * 
-													FROM `"._DB_PREFIX_."student`");
+		$students = Db::getInstance()->executeS("SELECT s.*, sl.* 
+													FROM `"._DB_PREFIX_."student` s 
+													LEFT JOIN `"._DB_PREFIX_."student_lang` sl ON (s.`id_student` = sl.`id_student`)
+													WHERE sl.`id_lang` = ".(int)$id_lang);
 		return $students;
 	}
 
 	/**
 	 * @return Student object
 	 */
-	public static function getBestStudent()
+	public static function getBestStudent($id_lang)
 	{
-		$student = Db::getInstance()->execute("SELECT *
-													FROM   `"._DB_PREFIX_."student`
-													WHERE  average_ball=(SELECT MAX(average_ball) FROM "._DB_PREFIX_."student)");
+		$student = Db::getInstance()->execute("SELECT s.*, sl.* 
+													FROM   `"._DB_PREFIX_."student` s
+													LEFT JOIN `"._DB_PREFIX_."student_lang` sl ON (s.`id_student` = sl.`id_student`)
+													WHERE sl.`id_lang` = ".(int)$id_lang."
+													AND average_ball=(SELECT MAX(average_ball) FROM "._DB_PREFIX_."student)");
 		return $student;
 	}
 
