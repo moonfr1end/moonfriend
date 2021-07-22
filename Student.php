@@ -26,7 +26,7 @@ class Student extends ObjectModel
 			'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isName', 'size' => 128],
 			'date' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
 			'status' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
-			'average_ball' => ['type' => self::TYPE_FLOAT, 'validate' => 'isBall']
+			'average_ball' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat']
 		]
 	];
 
@@ -38,7 +38,7 @@ class Student extends ObjectModel
 	/**
 	 * @return array of Students
 	 */
-	public static function getAllStudents($id_lang)
+	public static function getAllStudents()
 	{
 		$students = Db::getInstance()->executeS("SELECT s.*, sl.name 
 													FROM `"._DB_PREFIX_."student` s 
@@ -50,7 +50,7 @@ class Student extends ObjectModel
 	/**
 	 * @return Student object
 	 */
-	public static function getBestStudent($id_lang)
+	public static function getBestStudent()
 	{
 		$student = Db::getInstance()->execute("SELECT s.*, sl.name 
 													FROM   `"._DB_PREFIX_."student` s
