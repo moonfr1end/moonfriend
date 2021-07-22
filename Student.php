@@ -23,10 +23,10 @@ class Student extends ObjectModel
 		'multilang' => true,
 		'multilang_shop' => true,
 		'fields' => [
-			'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isName', 'size' => 128],
+			'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128],
 			'date' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
 			'status' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
-			'average_ball' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat']
+			'average_ball' => ['type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat']
 		]
 	];
 
