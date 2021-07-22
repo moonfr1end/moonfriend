@@ -2,9 +2,6 @@
 
 class Student extends ObjectModel
 {
-	/** @var int student ID */
-	public $id_student;
-
 	/** @var mixed string or array of Name */
 	public $name;
 
@@ -26,10 +23,10 @@ class Student extends ObjectModel
 		'multilang' => true,
 		'multilang_shop' => true,
 		'fields' => [
-			'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isStudentName', 'size' => 128],
+			'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isName', 'size' => 128],
 			'date' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
-			'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
-			'$average_ball' => ['type' => self::TYPE_FLOAT, 'validate' => 'isBall']
+			'status' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+			'average_ball' => ['type' => self::TYPE_FLOAT, 'validate' => 'isBall']
 		]
 	];
 
